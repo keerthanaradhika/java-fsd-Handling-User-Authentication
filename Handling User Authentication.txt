@@ -1,0 +1,228 @@
+                          Handling User Authentication
+Com.bean
+
+package com.bean;
+
+public class User {
+
+	private String email,password;
+	
+	public User()
+	{
+		
+	}
+
+	public User(String email, String password) {
+		super();
+		this.email = email;
+		this.password = password;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	@Override
+	public String toString() {
+		return "User [email=" + email + ", password=" + password + "]";
+	}
+	
+	
+}
+
+Com.service
+
+package com.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.bean.User;
+
+public class UserAutentication {
+
+	List<User> lists= new ArrayList<>();;
+	public boolean Login(User u)
+	{
+		boolean res=false;
+		for (User user : lists) {
+			if(!user.getEmail().equals(u.getEmail())&&user.getPassword().equals(u.getPassword()))
+			{
+			
+				
+				 res= false;
+				break;
+				
+			}
+			else
+			{
+				res= true;
+				break;
+				
+			}
+			
+			
+		}
+		return res;
+	}
+	
+	public List<User> listOfUser(User u)
+	{
+		this.lists.add(u);
+		return lists;
+	}
+	
+	public String registration(User u)
+	{
+		String res=null;
+		for (User user : lists) {
+			if(user.getEmail().equals(u.getEmail()))
+			{
+				
+				 res= "Email already exists";
+				break;
+				
+			}
+			else
+			{
+				listOfUser(u);
+				res= "Registered";
+				break;
+				
+			}
+		}
+		
+		return res;		
+	}
+
+}
+
+Com.test
+
+package com.test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Scanner;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import com.bean.User;
+import com.service.UserAutentication;
+
+class UserAutenticationTestHook {
+	
+	static User u;
+	static UserAutentication ua ;
+	static Scanner sc;
+	
+	@BeforeAll
+	static void setUpBeforeClass() throws Exception {
+		u=new User();
+		ua = new UserAutentication();
+		ua.listOfUser( new User("keerthana@gmail.com","keerthi"));
+	}
+
+	@AfterAll
+	static void tearDownAfterClass() throws Exception {
+		u=null;
+		ua=null;
+	}
+
+	@BeforeEach
+	void setUp() throws Exception {
+		
+		sc = new Scanner(System.in);
+		
+		
+	}
+
+	@AfterEach
+	void tearDown() throws Exception {
+		sc.close();
+	}
+
+	@Test
+	void testLogin() {
+		//fail("Not yet implemented");
+		System.out.println("enter your name and password to login");
+		u.setEmail(sc.next());
+		u.setPassword(sc.next());
+		assertTrue(ua.Login(u));
+		//assertFalse(ua.Login(new User("siva ranjani@gmail1.com","wrong")));
+		
+	}
+
+	@Test
+	void testListOfUser() {
+		//fail("Not yet implemented");
+		
+	assertNotNull(ua.listOfUser(new User("asmitha@gmail.com","password")));
+	}
+
+	@Test
+	void testRegistration() {
+		//fail("Not yet implemented");
+		
+		
+		assertEquals("Registered", ua.registration(new User("manger@work.com","manager")));
+		assertEquals("Email already exists", ua.registration(new User("keerthana@gmail.com","keerthi")));
+		
+		
+	}
+
+}
+
+pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>test</groupId>
+  <artifactId>autentication</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <dependencies>
+  <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-api</artifactId>
+    <version>5.7.2</version>
+    <scope>test</scope>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params -->
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-params</artifactId>
+    <version>5.7.2</version>
+    <scope>test</scope>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.junit.vintage/junit-vintage-engine -->
+<dependency>
+    <groupId>org.junit.vintage</groupId>
+    <artifactId>junit-vintage-engine</artifactId>
+    <version>5.7.2</version>
+    <scope>test</scope>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter -->
+<dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-junit-jupiter</artifactId>
+    <version>4.0.0</version>
+    <scope>test</scope>
+</dependency>
+</dependencies>
+</project>
